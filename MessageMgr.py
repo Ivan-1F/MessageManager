@@ -70,6 +70,8 @@ def on_player_joined(server, player):
             
             server.tell(player, "§6" + data[i]["sender"] + "§r于§a" +
                         data[i]["time"] + "§r给你留言 : " + "§6" + data[i]["message"] + "§r")
+            
+            delete_data(data[i]["message"])
 
 
 def on_info(server, info):
