@@ -109,22 +109,18 @@ def on_info(server, info):
                 time = data[i]["time"]
                 target = data[i]["target"]
                 message = data[i]["message"]
-                splited_time = time.split()
-                date = splited_time[0]
                 if flag :
-                    server.reply(info, "===================================")
-                    server.reply(info, "        时间           目标玩家    信息")
                     flag = 0
                     
                 delete = st.SText("[x]", color=st.SColor.red)
                 delete.styles = [st.SStyle.bold]
-                delete.hover_text = st.SText("点击删除该留言")
+                delete.hover_text = st.SText("点击删除§6" + data[i]["message"])
                 command = "!!msg del " + data[i]["message"]
                 delete.set_click_command(command)
                 st.show_to_player(server, player, delete)
                 
-                server.reply(info, " §a" + date + "§r    §6" +
-                             target + "§r    " + message)
+                server.reply(info, "§a" + time + " §6To " +
+                             target + "§r : " + message)
         if flag:
             server.reply(info, "§c你没有任何留言！")
     if splited_content[1] == "del":
