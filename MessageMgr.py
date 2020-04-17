@@ -5,7 +5,7 @@ Prefix = "!!msg"
 help_msg = '''------MCDR Message Manager插件------
 §a命令帮助如下:§r
 §6!!msg§r 显示这条信息
-§6!!msg send <收件人> <信息>§r 向收件人发送信息
+§6!!msg send <目标玩家> <信息>§r 向一位离线玩家留言信息，将在他上线时显示
 --------------------------------'''
 PluginName = "MessageMgr"
 DataPath = "plugins/" + PluginName + '/'
@@ -17,16 +17,29 @@ def format_time():
 
 def load_data():
     global data
-
     try:
         with open(DataPath + "message.json") as file:
             data = json.load(file, encoding='utf8')
-            return data
+    except:
+        return
+
+def add_data(time, sender, target, message):
+    global data
+
+    load_data()
+    
+    length = len(data)
+    data.append({"time" : time , "sender" : sender ,
+                 "target" : target , "message" : message})
+    
+    try:
+        with open(DataPath + "message.json", "w") as file:
+            json.dump(data, file)
     except:
         return
 
 def on_player_joined(server, player):
-    data = load_data()
+    load_data()
     for i in range(0, len(data)):
         if data[i]["target"] == player:
 
@@ -51,10 +64,15 @@ def on_info(server, info):
         if len(splited_content) < 4:
             server.reply(info, "§c格式错误§r，请输入§6!!msg§r查看帮助信息")
             return
-        
+
+        time = format_time()
         sender = info.player
         target = splited_content[2]
         message = splited_content[3]
         
         if sender == target:
             server.reply(info, "§c不能给自己留言！§r")
+            return
+
+        add_data(time, sender, target, message)
+        server.reply(info, "§a成功向§6" + target + "§a留言：§r" + message)
