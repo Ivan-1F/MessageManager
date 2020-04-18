@@ -1,5 +1,5 @@
 # MessageManager
-[English](github.com/wyf0762/MessageManager/tree/master/doc/README_en.md)
+[English](https://github.com/wyf0762/MessageManager/blob/master/doc/README_en.md)
 
 一个 [MCDReforged](https://github.com/Fallen-Breath/MCDReforged)的留言插件，需要[stext](https://github.com/TISUnion/stext)作为前置。
 
