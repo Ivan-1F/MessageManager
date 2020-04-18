@@ -70,7 +70,7 @@ def on_player_joined(server, player):
             server.tell(player, "§6" + data[i]["sender"] + "§r于§a" +
                         data[i]["time"] + "§r给你留言 : " + "§6" + data[i]["message"] + "§r")
             
-            print(delete_data(data[i]["message"]))
+            delete_data(data[i]["message"])
 
 
 def on_info(server, info):
@@ -113,15 +113,16 @@ def on_info(server, info):
                 if flag :
                     flag = 0
                     
-                delete = st.SText("[x]", color=st.SColor.red)
+                delete = st.SText("[x] §a" + time + " §6To " +
+                             target + "§r : " + message, color=st.SColor.red)
                 delete.styles = [st.SStyle.bold]
                 delete.hover_text = st.SText("点击删除§6" + data[i]["message"])
                 command = "!!msg del " + data[i]["message"]
                 delete.set_click_command(command)
                 st.show_to_player(server, player, delete)
                 
-                server.reply(info, "§a" + time + " §6To " +
-                             target + "§r : " + message)
+                #server.reply(info, "§a" + time + " §6To " +
+                #             target + "§r : " + message)
         if flag:
             server.reply(info, "§c你没有任何留言！")
     if splited_content[1] == "del":
