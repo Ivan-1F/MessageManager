@@ -1,5 +1,7 @@
 # MessageManager
 
+[中文](https://github.com/wyf0762/MessageManager/blob/master/README.md)
+
 A [MCDReforged](https://github.com/Fallen-Breath/MCDReforged) plugin to leave messages, [stext](https://github.com/TISUnion/stext) is required.
 
 Leave messages to a offline player, and show it to him the next time he goes online.
