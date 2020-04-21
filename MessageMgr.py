@@ -16,6 +16,7 @@ data = []
 
 def on_load(server, old_module):
     load_data()
+    server.add_help_message(Prefix, "向一位离线玩家留言信息，将在他上线时显示")
 
 def format_time():
 	return time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
