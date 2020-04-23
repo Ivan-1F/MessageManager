@@ -14,6 +14,9 @@ PluginName = "MessageMgr"
 DataPath = "plugins/" + PluginName + '/'
 data = []
 
+server = ""
+info = ""
+
 def on_load(server, old_module):
     load_data()
     server.add_help_message(Prefix, "向一位离线玩家留言信息，将在他上线时显示")
@@ -51,15 +54,47 @@ def add_data(time, sender, target, message):
 def delete_data(message):
     global data
     load_data()
-    print(data)
+    # print(data)
     length = len(data)
-    print(length)
+    # print(length)
     for i in range(0, length):
         if data[i]["message"] == message:
             del data[i]
             save_data()
             return 1
     return 0
+
+def show_list():
+    global global_server
+    global global_info
+    global data
+    load_data()
+
+    server = global_server
+    info = global_info
+    player = info.player
+
+    flag = 1
+    for i in range(0, len(data)):
+        if data[i]["sender"] == player:
+            time = data[i]["time"]
+            target = data[i]["target"]
+            message = data[i]["message"]
+            if flag:
+                flag = 0
+
+            delete = st.SText("[x] §a" + time + " §6To " +
+                              target + "§r : " + message, color=st.SColor.red)
+            delete.styles = [st.SStyle.bold]
+            delete.hover_text = st.SText("点击删除§6" + data[i]["message"])
+            command = "!!msg del " + data[i]["message"]
+            delete.set_click_command(command)
+            st.show_to_player(server, player, delete)
+
+            # server.reply(info, "§a" + time + " §6To " +
+            #             target + "§r : " + message)
+    if flag:
+        server.reply(info, "§c你没有任何留言！")
 
 def on_player_joined(server, player):
     load_data()
@@ -75,6 +110,12 @@ def on_player_joined(server, player):
 
 
 def on_info(server, info):
+    global global_server
+    global global_info
+
+    global_server = server
+    global_info = info
+
     content = info.content
     splited_content = content.split()
     player = info.player
@@ -102,35 +143,16 @@ def on_info(server, info):
 
         add_data(time, sender, target, message)
         server.reply(info, "§a成功向§6" + target + "§a留言 : §r" + message)
+
     if splited_content[1] == "list":
-        global data
-        load_data()
-        flag = 1
-        for i in range(0, len(data)):
-            if data[i]["sender"] == player:
-                time = data[i]["time"]
-                target = data[i]["target"]
-                message = data[i]["message"]
-                if flag :
-                    flag = 0
-                    
-                delete = st.SText("[x] §a" + time + " §6To " +
-                             target + "§r : " + message, color=st.SColor.red)
-                delete.styles = [st.SStyle.bold]
-                delete.hover_text = st.SText("点击删除§6" + data[i]["message"])
-                command = "!!msg del " + data[i]["message"]
-                delete.set_click_command(command)
-                st.show_to_player(server, player, delete)
-                
-                #server.reply(info, "§a" + time + " §6To " +
-                #             target + "§r : " + message)
-        if flag:
-            server.reply(info, "§c你没有任何留言！")
+        show_list()
+
     if splited_content[1] == "del":
         if len(splited_content) < 3:
             server.reply(info, "§c格式错误§r，请输入§6!!msg§r查看帮助信息")
             return
         if delete_data(splited_content[2]):
             server.reply(info, "§a成功删除§r : " + splited_content[2])
+            show_list()
         else:
             server.reply(info, "§c未找到指定留言")
