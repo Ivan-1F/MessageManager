@@ -120,7 +120,7 @@ def on_info(server, info):
     splited_content = content.split()
     player = info.player
     
-    if splited_content[0] != Prefix:
+    if len(splited_content) == 0 or splited_content[0] != Prefix:
         return
     
     if len(splited_content) == 1: 
